@@ -38,7 +38,7 @@ if ($method === 'POST') {
     $stmt->execute([$name, $lat, $lng, $level, $desc]);
     $newId = $pdo->lastInsertId();
 
-    logManagerAction($pdo, 'added_building', "Added building \"$name\"");
+    logActivity($pdo, 'added_building', "Added building \"$name\" (lat: $lat, lng: $lng, level: $level)");
 
     echo json_encode(['success' => true, 'id' => $newId]);
     exit;
@@ -63,7 +63,7 @@ if ($method === 'PUT') {
     );
     $stmt->execute([$name, $lat, $lng, $level, $desc, $id]);
 
-    logManagerAction($pdo, 'edited_building', "Edited building \"$name\"");
+    logActivity($pdo, 'edited_building', "Edited building \"$name\" (id: $id, level: $level)");
 
     echo json_encode(['success' => true]);
     exit;
@@ -84,7 +84,7 @@ if ($method === 'DELETE') {
     $pdo->prepare("DELETE FROM buildings WHERE id = ?")->execute([$id]);
 
     if ($building) {
-        logManagerAction($pdo, 'deleted_building', "Deleted building \"{$building['name']}\"");
+        logActivity($pdo, 'deleted_building', "Deleted building \"{$building['name']}\" (id: $id)");
     }
 
     echo json_encode(['success' => true]);
@@ -93,11 +93,3 @@ if ($method === 'DELETE') {
 
 http_response_code(405);
 echo json_encode(['success' => false, 'message' => 'Method not allowed']);
-
-function logManagerAction(PDO $pdo, string $action, string $detail): void {
-    $userId = $_SESSION['user_id'] ?? null;
-    if (!$userId) return;
-    $pdo->prepare(
-        "INSERT INTO activity_log (user_id, action, detail) VALUES (?, ?, ?)"
-    )->execute([$userId, $action, $detail]);
-}
