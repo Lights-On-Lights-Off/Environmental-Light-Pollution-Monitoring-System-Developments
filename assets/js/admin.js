@@ -30,14 +30,27 @@ function navigate(section) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.getElementById('section-' + section)?.classList.add('active');
 
-    const labels = { dashboard: 'Dashboard', users: 'Users Management', settings: 'System Settings' };
+    const labels = { dashboard: 'Dashboard', users: 'Users Management', activity: 'Activity Log', settings: 'System Settings' };
     document.getElementById('page-title').textContent = labels[section] || section;
+    const subs = { dashboard: 'System overview', users: 'Manage accounts', activity: 'All system events', settings: 'System configuration' };
+    const subEl = document.getElementById('topbar-sub');
+    if (subEl) subEl.textContent = subs[section] || '';
 }
 
 function filterUsers() {
     const val = document.getElementById('role-filter').value;
     document.querySelectorAll('#users-tbody tr').forEach(row => {
         row.style.display = (val === 'all' || row.dataset.role === val) ? '' : 'none';
+    });
+}
+
+function filterActivityLog() {
+    const role = document.getElementById('log-role-filter').value;
+    const type = document.getElementById('log-type-filter').value;
+    document.querySelectorAll('#activity-tbody tr').forEach(row => {
+        const roleMatch = role === 'all' || row.dataset.role === role;
+        const typeMatch = type === 'all' || row.dataset.type === type;
+        row.style.display = (roleMatch && typeMatch) ? '' : 'none';
     });
 }
 
