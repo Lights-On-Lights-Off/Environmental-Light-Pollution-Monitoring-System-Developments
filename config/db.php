@@ -38,10 +38,11 @@ try {
 function logActivity(PDO $pdo, string $action, string $detail): void {
     $userId = $_SESSION['user_id'] ?? null;
     if (!$userId) return;
+    $page = $_SERVER['HTTP_REFERER'] ?? ($_SERVER['REQUEST_URI'] ?? null);
     try {
         $pdo->prepare(
-            "INSERT INTO activity_log (user_id, action, detail) VALUES (?, ?, ?)"
-        )->execute([$userId, $action, $detail]);
+            "INSERT INTO activity_log (user_id, action, detail, page) VALUES (?, ?, ?, ?)"
+        )->execute([$userId, $action, $detail, $page]);
     } catch (Throwable $e) {
         // Never crash the main request just because logging failed
     }
