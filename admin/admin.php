@@ -232,8 +232,13 @@ function timeAgo(string $dt): string {
                                         <span style="font-size:0.8rem;"><?= htmlspecialchars($actionLabel) ?></span>
                                     </div>
                                 </td>
-                                <td style="color:var(--muted);font-size:0.82rem;"><?= htmlspecialchars($e['detail'] ?? '') ?></td>
-                            </tr>
+                                <td>
+                                    <?php if (!empty($e['detail'])): ?>
+                                    <button class="btn btn-ghost btn-sm" onclick="showDetail('<?= htmlspecialchars(addslashes($e['detail']), ENT_QUOTES) ?>')">View</button>
+                                    <?php else: ?>
+                                    <span style="color:var(--muted);font-size:0.8rem;">—</span>
+                                    <?php endif; ?>
+                                </td>
                             <?php endforeach; ?>
                             </tbody>
                         </table>
