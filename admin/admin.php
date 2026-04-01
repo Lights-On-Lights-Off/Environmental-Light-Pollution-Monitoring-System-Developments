@@ -234,7 +234,7 @@ function timeAgo(string $dt): string {
                                 </td>
                                 <td>
                                     <?php if (!empty($e['detail'])): ?>
-                                    <button class="btn btn-ghost btn-sm" onclick="showDetail('<?= htmlspecialchars(addslashes($e['detail']), ENT_QUOTES) ?>')">View</button>
+                                    <button class="btn btn-ghost btn-sm" onclick="showDetail('<?= addslashes(htmlspecialchars($e['detail'])) ?>')">View</button>
                                     <?php else: ?>
                                     <span style="color:var(--muted);font-size:0.8rem;">—</span>
                                     <?php endif; ?>
@@ -314,6 +314,6 @@ function timeAgo(string $dt): string {
 <script>
 window.BASE_URL = "<?= url('') ?>";
 </script>
-<script src="<?= url('assets/js/admin.js') ?>"></script>
+<script src="<?= url('assets/js/admin.js') ?>?v=<?= time() ?>"></script>
 </body>
 </html>
