@@ -33,6 +33,19 @@ try {
     die(json_encode(['success' => false, 'message' => 'Database connection failed: ' . $e->getMessage()]));
 }
 
+// Get the real IP address of the visitor.
+// Source: codexworld.com/how-to/get-user-ip-address-php
+function getUserIpAddr() {
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
+}
+
 // Shared activity logger — call this from any API file after $pdo is available.
 // Requires session to be started so $_SESSION['user_id'] is accessible.
 function logActivity(PDO $pdo, string $action, string $detail): void {
