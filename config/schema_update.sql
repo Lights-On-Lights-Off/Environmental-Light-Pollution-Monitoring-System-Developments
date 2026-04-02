@@ -12,3 +12,6 @@ ALTER TABLE activity_log
 
 ALTER TABLE activity_log
     ADD COLUMN ip_address VARCHAR(45) DEFAULT NULL AFTER page;
+
+ALTER TABLE activity_log
+    ADD COLUMN browser VARCHAR(45) DEFAULT NULL AFTER ip_address;
