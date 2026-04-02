@@ -204,7 +204,7 @@ function timeAgo(string $dt): string {
                     </div>
                     <div class="table-wrap">
                         <table>
-                            <thead><tr><th>Time</th><th>Actor</th><th>Role</th><th>Action</th><th>Detail</th><th>Page</th><th>IP Address</th></tr></thead>
+                            <thead><tr><th>Time</th><th>Actor</th><th>Role</th><th>Action</th><th>Detail</th><th>Page</th><th>IP Address</th><th>Browser</th></tr></thead>
                             <tbody id="activity-tbody">
                             <?php foreach ($activityLog as $e):
                                 $actionGroup = match(true) {
@@ -244,6 +244,9 @@ function timeAgo(string $dt): string {
                                 </td>
                                 <td style="font-size:0.78rem;color:var(--muted);">
                                     <?= htmlspecialchars($e['ip_address'] ?? '—') ?>
+                                </td>
+                                <td style="font-size:0.78rem;color:var(--muted);">
+                                    <?= htmlspecialchars($e['browser'] ?? '—') ?>
                                 </td>
                             <?php endforeach; ?>
                             </tbody>
