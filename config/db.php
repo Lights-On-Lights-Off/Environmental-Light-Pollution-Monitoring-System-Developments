@@ -3,7 +3,7 @@
 // All other PHP files include this to get the $pdo variable.
 
 // Derive BASE_URL from the server environment so the app works at any path
-// (e.g. localhost/, localhost/IAS---ELPMS/, or a live domain subfolder).
+// (localhost/, localhost/IAS---ELPMS/, or a live domain subfolder).
 if (!defined('BASE_URL')) {
     $docRoot = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT'] ?? '');
     $appRoot = str_replace('\\', '/', dirname(__DIR__));
@@ -33,16 +33,46 @@ try {
     die(json_encode(['success' => false, 'message' => 'Database connection failed: ' . $e->getMessage()]));
 }
 
-// Shared activity logger — call this from any API file after $pdo is available.
+// Get the real IP address of the visitor.
+// Source: codexworld.com/how-to/get-user-ip-address-php
+function getUserIpAddr() {
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
+}
+
+// Detects browser name from User-Agent string.
+// Source: php.net/manual/en/function.get-browser.php 
+function get_browser_name($user_agent) {
+//from brave github repo to detect the brave atempting to fix issue
+    $clientHints = $_SERVER['HTTP_SEC_CH_UA'] ?? '';
+    if (strpos($clientHints, 'Brave') !== false) return 'Brave';
+
+    if (strpos($user_agent, 'Opera') || strpos($user_agent, 'OPR/')) return 'Opera';
+    elseif (strpos($user_agent, 'Edg'))     return 'Edge';
+    elseif (strpos($user_agent, 'Chrome'))  return 'Chrome';
+    elseif (strpos($user_agent, 'Safari'))  return 'Safari';
+    elseif (strpos($user_agent, 'Firefox')) return 'Firefox';
+    elseif (strpos($user_agent, 'MSIE') || strpos($user_agent, 'Trident/7')) return 'Internet Explorer';
+    return 'Other';
+}
+
+// Shared activity logger - call this from any API file after $pdo is available.
 // Requires session to be started so $_SESSION['user_id'] is accessible.
 function logActivity(PDO $pdo, string $action, string $detail): void {
-    $userId = $_SESSION['user_id'] ?? null;
+    $userId  = $_SESSION['user_id'] ?? null;
     if (!$userId) return;
+    $page    = $_SERVER['HTTP_REFERER'] ?? ($_SERVER['REQUEST_URI'] ?? null);
+    $ip      = getUserIpAddr();
+    $browser = get_browser_name($_SERVER['HTTP_USER_AGENT'] ?? '');
     try {
         $pdo->prepare(
-            "INSERT INTO activity_log (user_id, action, detail) VALUES (?, ?, ?)"
-        )->execute([$userId, $action, $detail]);
-    } catch (Throwable $e) {
-        // Never crash the main request just because logging failed
-    }
+            "INSERT INTO activity_log (user_id, action, detail, page, ip_address, browser) VALUES (?, ?, ?, ?, ?, ?)"
+        )->execute([$userId, $action, $detail, $page, $ip, $browser]);
+    } catch (Throwable $e) {}
 }

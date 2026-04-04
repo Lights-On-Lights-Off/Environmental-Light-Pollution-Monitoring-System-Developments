@@ -1,6 +1,11 @@
 // BASE_URL is injected by PHP so fetch paths work in any subfolder
 const API = (path) => (window.BASE_URL || '') + '/' + path.replace(/^\//, '');
 
+function showDetail(text) {
+    document.getElementById('detail-modal-text').textContent = text;
+    document.getElementById('detail-modal').classList.add('open');
+}
+
 let editingUserId = null;
 
 // Section navigation
@@ -60,6 +65,7 @@ function openRoleModal(id, name, role) {
     document.getElementById('role-select').value = role;
     document.getElementById('role-modal').classList.add('open');
 }
+
 
 async function saveRole() {
     if (!editingUserId) return;

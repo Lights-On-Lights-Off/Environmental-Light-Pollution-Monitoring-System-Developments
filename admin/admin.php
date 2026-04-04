@@ -204,7 +204,7 @@ function timeAgo(string $dt): string {
                     </div>
                     <div class="table-wrap">
                         <table>
-                            <thead><tr><th>Time</th><th>Actor</th><th>Role</th><th>Action</th><th>Detail</th></tr></thead>
+                            <thead><tr><th>Time</th><th>Actor</th><th>Role</th><th>Action</th><th>Detail</th><th>Page</th><th>IP Address</th><th>Browser</th></tr></thead>
                             <tbody id="activity-tbody">
                             <?php foreach ($activityLog as $e):
                                 $actionGroup = match(true) {
@@ -232,8 +232,22 @@ function timeAgo(string $dt): string {
                                         <span style="font-size:0.8rem;"><?= htmlspecialchars($actionLabel) ?></span>
                                     </div>
                                 </td>
-                                <td style="color:var(--muted);font-size:0.82rem;"><?= htmlspecialchars($e['detail'] ?? '') ?></td>
-                            </tr>
+                                <td>
+                                    <?php if (!empty($e['detail'])): ?>
+                                    <button class="btn btn-ghost btn-sm" onclick="showDetail('<?= addslashes(htmlspecialchars($e['detail'])) ?>')">View</button>
+                                    <?php else: ?>
+                                    <span style="color:var(--muted);font-size:0.8rem;">—</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td style="font-size:0.78rem;color:var(--muted);word-break:break-all;">
+                                    <?= htmlspecialchars($e['page'] ?? '—') ?>
+                                </td>
+                                <td style="font-size:0.78rem;color:var(--muted);">
+                                    <?= htmlspecialchars($e['ip_address'] ?? '—') ?>
+                                </td>
+                                <td style="font-size:0.78rem;color:var(--muted);">
+                                    <?= htmlspecialchars($e['browser'] ?? '—') ?>
+                                </td>
                             <?php endforeach; ?>
                             </tbody>
                         </table>
@@ -293,9 +307,22 @@ function timeAgo(string $dt): string {
     </div>
 </div>
 
+<!-- Detail Modal -->
+<div class="modal-overlay" id="detail-modal">
+    <div class="modal-box">
+        <div class="modal-head">
+            <h3>Action Detail</h3>
+            <button class="modal-close" onclick="document.getElementById('detail-modal').classList.remove('open')">✕</button>
+        </div>
+        <div class="modal-body">
+            <p id="detail-modal-text" style="font-size:0.9rem;line-height:1.6;word-break:break-word;"></p>
+        </div>
+    </div>
+</div>
+
 <script>
 window.BASE_URL = "<?= url('') ?>";
 </script>
-<script src="<?= url('assets/js/admin.js') ?>"></script>
+<script src="<?= url('assets/js/admin.js') ?>?v=<?= time() ?>"></script>
 </body>
 </html>
