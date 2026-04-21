@@ -35,11 +35,28 @@ function navigate(section) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.getElementById('section-' + section)?.classList.add('active');
 
-    const labels = { dashboard: 'Dashboard', users: 'Users Management', activity: 'Activity Log', settings: 'System Settings' };
+    const labels = { dashboard: 'Dashboard', users: 'Users Management', activity: 'Activity Log', pageviews: 'Page Views', settings: 'System Settings' };
     document.getElementById('page-title').textContent = labels[section] || section;
-    const subs = { dashboard: 'System overview', users: 'Manage accounts', activity: 'All system events', settings: 'System configuration' };
+    const subs = { dashboard: 'System overview', users: 'Manage accounts', activity: 'All system events', pageviews: 'User navigation history', settings: 'System configuration' };
     const subEl = document.getElementById('topbar-sub');
     if (subEl) subEl.textContent = subs[section] || '';
+
+    // Initialize DataTables only when activity section is opened, and only once
+    if (section === 'activity' && !window._dtInitialized) {
+        window._dtInitialized = true;
+        setTimeout(() => {
+            new DataTable('#activity-table', {
+                pageLength: 25,
+                order: [[0, 'desc']],
+                language: {
+                    search: 'Search logs:',
+                    lengthMenu: 'Show _MENU_ entries',
+                    info: 'Showing _START_ to _END_ of _END_ total entries',
+                    emptyTable: 'No activity recorded yet'
+                }
+            });
+        }, 50);
+    }
 }
 
 function filterUsers() {
@@ -59,6 +76,42 @@ function filterActivityLog() {
     });
 }
 
+async function downloadActivityCSV() {
+    const res  = await fetch(API('api/admin.php?action=activity_export'));
+    const data = await res.json();
+
+    if (!data.success || !data.log.length) {
+        alert('No activity records found.');
+        return;
+    }
+
+    const headers = ['Time', 'Actor', 'Role', 'Action', 'Detail', 'Page', 'IP Address', 'Browser'];
+    const csvRows = [headers.join(',')];
+
+    data.log.forEach(row => {
+        const cells = [
+            row.created_at,
+            row.actor_name,
+            row.actor_role,
+            row.action,
+            row.detail    ?? '',
+            row.page      ?? '',
+            row.ip_address ?? '',
+            row.browser   ?? '',
+        ].map(val => `"${String(val).replace(/"/g, '""')}"`);
+        csvRows.push(cells.join(','));
+    });
+
+    const csv  = csvRows.join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a    = Object.assign(document.createElement('a'), {
+        href:     URL.createObjectURL(blob),
+        download: `activity-log-${new Date().toISOString().slice(0, 10)}.csv`,
+    });
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
 function openRoleModal(id, name, role) {
     editingUserId = id;
     document.getElementById('role-modal-name').textContent = name;

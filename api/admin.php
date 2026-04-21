@@ -33,11 +33,23 @@ if ($method === 'GET') {
 
     if ($action === 'activity') {
         $stmt = $pdo->query(
-            "SELECT al.*, u.name AS actor_name
+            "SELECT al.*, u.name AS actor_name, u.role AS actor_role
              FROM activity_log al
              JOIN users u ON u.id = al.user_id
              ORDER BY al.created_at DESC
              LIMIT 50"
+        );
+        echo json_encode(['success' => true, 'log' => $stmt->fetchAll()]);
+        exit;
+    }
+
+    if ($action === 'activity_export') {
+        $stmt = $pdo->query(
+            "SELECT al.created_at, u.name AS actor_name, u.role AS actor_role,
+                    al.action, al.detail, al.page, al.ip_address, al.browser
+             FROM activity_log al
+             JOIN users u ON u.id = al.user_id
+             ORDER BY al.created_at DESC"
         );
         echo json_encode(['success' => true, 'log' => $stmt->fetchAll()]);
         exit;

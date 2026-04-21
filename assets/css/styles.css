@@ -241,11 +241,11 @@ body.page-index { overflow-x: hidden; overflow-y: auto; }
 
 #app {
     display: grid;
-    grid-template-rows: auto 1fr auto;
-    gap: 14px;
+    grid-template-rows: auto 1fr 200px;
+    gap: 8px;
     height: calc(100vh - 72px);
-    padding: 6px 14px 14px;
-    overflow-y: auto;
+    padding: 6px 14px 8px;
+    overflow: hidden;
 }
 
 .top-row { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; height: 100%; }
@@ -253,11 +253,12 @@ body.page-index { overflow-x: hidden; overflow-y: auto; }
 #map {
     width: 100%;
     height: 100%;
-    min-height: 500px;
+    min-height: 0;
     border-radius: var(--radius);
     border: 1px solid var(--stroke);
     background: #000;
 }
+
 
 .card-stack { display: flex; flex-direction: column; gap: 14px; height: 100%; }
 
@@ -268,7 +269,7 @@ body.page-index { overflow-x: hidden; overflow-y: auto; }
     color: #fff;
 }
 
-.card h5, .card h6 { margin: 0 0 6px; }
+.card h5, .card h6 { margin: 0 0 10px; font-size: 1rem; font-weight: 600; color: #fff; letter-spacing: 0.3px; }
 .card.p-3 { padding: 14px !important; }
 
 .kpis { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
@@ -289,9 +290,13 @@ body.page-index { overflow-x: hidden; overflow-y: auto; }
 
 .bottom-panel { display: grid; gap: 14px; }
 
-#logTable { font-size: 0.95rem; max-height: 150px; overflow-y: auto; }
-.table thead   { background: #000; }
-.table tbody tr{ background: #000; }
+#logTable { font-size: 0.85rem; height: 150px; overflow-y: auto; }
+.table { border-collapse: collapse; width: 100%; }
+.table thead tr { background: #0a0a0a; border-bottom: 1px solid var(--stroke); }
+.table thead th { padding: 8px 12px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: #aaa; }
+.table tbody tr { background: #050203; border-bottom: 1px solid var(--stroke); transition: background 0.15s; }
+.table tbody tr:hover { background: #111; }
+.table tbody td { padding: 8px 12px; color: #e0e0e0; font-size: 0.85rem; }
 
 .info-section {
     min-height: calc(100vh - 58px);
