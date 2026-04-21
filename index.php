@@ -25,7 +25,6 @@ $buildings = $pdo->query("SELECT * FROM buildings ORDER BY id ASC")->fetchAll();
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Environmental Light Pollution Monitoring System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="<?= url('assets/css/styles.css') ?>" />
 </head>
@@ -116,9 +115,9 @@ $buildings = $pdo->query("SELECT * FROM buildings ORDER BY id ASC")->fetchAll();
         </div>
 
         <div class="bottom-panel">
-            <div id="logTable" class="table-responsive">
-                <table class="table table-sm table-bordered align-middle">
-                    <thead class="table-dark">
+            <div id="logTable">
+                <table class="table">
+                    <thead>
                         <tr>
                             <th>Light Sensor</th>
                             <th>Status</th>
@@ -244,7 +243,6 @@ function showSection(name, btn) {
 <!-- Load Leaflet before main.js so the L global is available -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="<?= url('assets/js/main.js') ?>"></script>
 </body>
 </html>

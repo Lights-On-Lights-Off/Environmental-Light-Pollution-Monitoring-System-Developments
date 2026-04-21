@@ -1,7 +1,8 @@
 <?php
 // Central database connection using PDO.
 // All other PHP files include this to get the $pdo variable.
-
+// Set timezone to Philippine Standard Time (UTC+8)
+date_default_timezone_set('Asia/Manila');
 // Derive BASE_URL from the server environment so the app works at any path
 // (localhost/, localhost/IAS---ELPMS/, or a live domain subfolder).
 if (!defined('BASE_URL')) {
@@ -13,9 +14,9 @@ if (!defined('BASE_URL')) {
 }
 
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'u442411629_hayag');
-define('DB_USER', 'u442411629_dev_hayag');
-define('DB_PASS', 'FI6Qr2mmS4v{');
+define('DB_NAME', '');
+define('DB_USER', 'root');
+define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');
 
 $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
@@ -70,9 +71,11 @@ function logActivity(PDO $pdo, string $action, string $detail): void {
     $page    = $_SERVER['HTTP_REFERER'] ?? ($_SERVER['REQUEST_URI'] ?? null);
     $ip      = getUserIpAddr();
     $browser = get_browser_name($_SERVER['HTTP_USER_AGENT'] ?? '');
+
     try {
         $pdo->prepare(
             "INSERT INTO activity_log (user_id, action, detail, page, ip_address, browser) VALUES (?, ?, ?, ?, ?, ?)"
         )->execute([$userId, $action, $detail, $page, $ip, $browser]);
     } catch (Throwable $e) {}
+    //not crashing the session
 }
