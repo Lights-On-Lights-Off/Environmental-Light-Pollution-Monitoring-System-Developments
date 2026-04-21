@@ -137,7 +137,7 @@ $pendingRequests = $pdo->query(
             <!-- Settings section -->
             <div class="section" id="section-settings">
                 <div class="card-panel">
-                    <div class="card-head"><h3>System Settings</h3></div>
+                    <div class="card-head"><h3>System Settings</h3><div class="card-head-actions"><span class="text-muted" style="font-size:0.8rem;">System administration</span></div></div>
                     <div class="settings-grid">
                         <div class="setting-item"><div class="setting-info"><h4>Clear All Requests</h4><p>Permanently delete all soft-deleted requests from the recycle bin. Cannot be undone.</p></div><button class="btn btn-danger btn-sm" onclick="clearRequests()" title="Permanently delete all soft-deleted requests">Clear</button></div>
                         <div class="setting-item"><div class="setting-info"><h4>Clear Notifications</h4><p>Remove all user notifications stored in the system.</p></div><button class="btn btn-warn btn-sm" onclick="clearNotifications()" title="Remove all user notifications">Clear</button></div>
