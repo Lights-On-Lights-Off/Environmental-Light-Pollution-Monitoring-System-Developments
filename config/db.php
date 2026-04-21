@@ -13,8 +13,8 @@ if (!defined('BASE_URL')) {
     define('BASE_URL', rtrim($relative, '/'));
 }
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', '');
+define('DB_HOST', '127.0.0.1:3307');
+define('DB_NAME', 'lpms_db');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');
