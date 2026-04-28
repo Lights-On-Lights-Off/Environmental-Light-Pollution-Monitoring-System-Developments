@@ -45,6 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             };
             header('Location: ' . $dest);
             exit;
+            /*
+            $log = "[ELPMS] LOGIN - User: {$user['name']} | Email: {$user['email']} | Role: {$user['role']} | ID: {$user['id']}";
+            echo "<script>console.log(" . json_encode($log) . "); window.location='" . $dest . "';</script>";
+            exit;
+            */
         } else {
             $errors[] = 'Invalid email or password.';
             // Log failed attempt if the email exists (wrong password)
@@ -89,6 +94,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $_SESSION['user_id'] = $newUserId;
             logActivity($pdo, 'registered', "New account registered: $name ($email)");
             unset($_SESSION['user_id']);
+
+            /*
+            $log = "[ELPMS] REGISTER - Name: $name | Email: $email | ID: $newUserId";
+            echo "<script>console.log(" . json_encode($log) . ")</script>";
+            */
+            
             $success = 'Account created! You can now log in.';
             $tab = 'login';
         }
